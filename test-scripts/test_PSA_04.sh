@@ -124,9 +124,4 @@ else
     print_output "Content of website web2 is not as expected" false
 fi
 
-print_output "TestCase1" true
-print_output "TestCase2" false
-
-print_warning "This is a warning message!"
-
 print_summary
