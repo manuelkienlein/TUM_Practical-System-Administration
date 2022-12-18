@@ -86,7 +86,7 @@ else
     print_output "User homepage of ge65xin is not reachable" false
 fi
 
-if curl -I "https://vm2.psa-team8.cit.tum.de/~ge65xin" 2>&1 | grep -w "200\|301" > /dev/null ; then
+if curl -I -k "https://vm2.psa-team8.cit.tum.de/~ge65xin" 2>&1 | grep -w "200\|301" > /dev/null ; then
     print_output "User homepage (https) of ge65xin is reachable" true
 else
     print_output "User homepage (https) of ge65xin is not reachable" false
@@ -112,7 +112,7 @@ else
     print_output "Website web2.psa-team8.cit.tum.de is not reachable" false
 fi
 
-if curl -I "https://web2.psa-team8.cit.tum.de/" 2>&1 | grep -w "200\|301" > /dev/null ; then
+if curl -I -k "https://web2.psa-team8.cit.tum.de/" 2>&1 | grep -w "200\|301" > /dev/null ; then
     print_output "Website web2.psa-team8.cit.tum.de (https) is reachable" true
 else
     print_output "Website web2.psa-team8.cit.tum.de (https) is not reachable" false
