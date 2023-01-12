@@ -47,6 +47,15 @@ print_warning () {
 	echo " ${COLOR_YELLOW}Warning: $1${COLOR_RESET}"
 }
 
+test_service_active () {
+        STATUS="$(systemctl is-active $1)"
+        if [ "${STATUS}" = "active" ]; then
+                print_output "Service $1 is running" true
+        else
+                print_output "Service $1 is not running" false
+        fi
+}
+
 print_summary () {
 	echo ""
 	echo "${COLOR_GRAY}===========================================================================${COLOR_RESET}"
