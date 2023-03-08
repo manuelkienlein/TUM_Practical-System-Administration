@@ -58,70 +58,85 @@ print_summary () {
         echo ""
 }
 
+test_service_active () {
+        STATUS="$(systemctl is-active $1)"
+        if [ "${STATUS}" = "active" ]; then
+                print_output "Service $1 is running" true
+        else
+                print_output "Service $1 is not running" false
+        fi
+}
+
 # ---------------------------------------
 # Test Cases
 # ---------------------------------------
 
 print_title "Task 4: Webserver Test Script"
 
-print_headline "Testing http and https of webserver"
+if [ "$HOSTNAME" = "vmpsa08-02" ]; then
+		test_service_active apache2
 
-if curl -I "http://vm2.psa-team8.cit.tum.de" 2>&1 | grep -w "200\|301" > /dev/null ; then
-    print_output "Webserver is reachable via HTTP" true
+        print_headline "Testing http and https of webserver"
+
+		if curl -I "http://vm2.psa-team8.cit.tum.de" 2>&1 | grep -w "200\|301" > /dev/null ; then
+			print_output "Webserver is reachable via HTTP" true
+		else
+			print_output "Webserver is not reachable via HTTP" false
+		fi
+
+		if curl -I --insecure "https://vm2.psa-team8.cit.tum.de" 2>&1 | grep -w "200\|301" > /dev/null ; then
+			print_output "Webserver reachable via HTTPS" true
+		else
+			print_output "Webserver not reachable via HTTPS" false
+		fi
+
+		print_headline "Testing user websites"
+
+		if curl -I "http://vm2.psa-team8.cit.tum.de/~ge65xin" 2>&1 | grep -w "200\|301" > /dev/null ; then
+			print_output "User homepage of ge65xin is reachable" true
+		else
+			print_output "User homepage of ge65xin is not reachable" false
+		fi
+
+		if curl -I -k "https://vm2.psa-team8.cit.tum.de/~ge65xin" 2>&1 | grep -w "200\|301" > /dev/null ; then
+			print_output "User homepage (https) of ge65xin is reachable" true
+		else
+			print_output "User homepage (https) of ge65xin is not reachable" false
+		fi
+
+		if curl --insecure -G vm2.psa-team8.cit.tum.de/~ge65xin/ 2>&1 | grep -w "Manuels Homepage" > /dev/null ; then
+			print_output "User homepage content of ge65xin is as expected" true
+		else
+			print_output "User homepage content of ge65xin is not as expected" false
+		fi
+
+		if curl --insecure -G vm2.psa-team8.cit.tum.de/~ga84guv/ 2>&1 | grep -w "Vronis Website" > /dev/null ; then
+			print_output "User homepage content of ga84guv is as expected" true
+		else
+			print_output "User homepage content of ga84guv is not as expected" false
+		fi
+
+		print_headline "Test second website web2.psa-team8.cit.tum.de"
+
+		if curl -I "http://web2.psa-team8.cit.tum.de/" 2>&1 | grep -w "200\|301" > /dev/null ; then
+			print_output "Website web2.psa-team8.cit.tum.de is reachable" true
+		else
+			print_output "Website web2.psa-team8.cit.tum.de is not reachable" false
+		fi
+
+		if curl -I -k "https://web2.psa-team8.cit.tum.de/" 2>&1 | grep -w "200\|301" > /dev/null ; then
+			print_output "Website web2.psa-team8.cit.tum.de (https) is reachable" true
+		else
+			print_output "Website web2.psa-team8.cit.tum.de (https) is not reachable" false
+		fi
+
+		if curl --insecure -G web2.psa-team8.cit.tum.de 2>&1 | grep -w "Zweite Website" > /dev/null ; then
+			print_output "Content of website web2 is as expected" true
+		else
+			print_output "Content of website web2 is not as expected" false
+		fi
 else
-    print_output "Webserver is not reachable via HTTP" false
-fi
-
-if curl -I --insecure "https://vm2.psa-team8.cit.tum.de" 2>&1 | grep -w "200\|301" > /dev/null ; then
-    print_output "Webserver reachable via HTTPS" true
-else
-    print_output "Webserver not reachable via HTTPS" false
-fi
-
-print_headline "Testing user websites"
-
-if curl -I "http://vm2.psa-team8.cit.tum.de/~ge65xin" 2>&1 | grep -w "200\|301" > /dev/null ; then
-    print_output "User homepage of ge65xin is reachable" true
-else
-    print_output "User homepage of ge65xin is not reachable" false
-fi
-
-if curl -I -k "https://vm2.psa-team8.cit.tum.de/~ge65xin" 2>&1 | grep -w "200\|301" > /dev/null ; then
-    print_output "User homepage (https) of ge65xin is reachable" true
-else
-    print_output "User homepage (https) of ge65xin is not reachable" false
-fi
-
-if curl --insecure -G vm2.psa-team8.cit.tum.de/~ge65xin/ 2>&1 | grep -w "Manuels Homepage" > /dev/null ; then
-    print_output "User homepage content of ge65xin is as expected" true
-else
-    print_output "User homepage content of ge65xin is not as expected" false
-fi
-
-if curl --insecure -G vm2.psa-team8.cit.tum.de/~ga84guv/ 2>&1 | grep -w "Vronis Website" > /dev/null ; then
-    print_output "User homepage content of ga84guv is as expected" true
-else
-    print_output "User homepage content of ga84guv is not as expected" false
-fi
-
-print_headline "Test second website web2.psa-team8.cit.tum.de"
-
-if curl -I "http://web2.psa-team8.cit.tum.de/" 2>&1 | grep -w "200\|301" > /dev/null ; then
-    print_output "Website web2.psa-team8.cit.tum.de is reachable" true
-else
-    print_output "Website web2.psa-team8.cit.tum.de is not reachable" false
-fi
-
-if curl -I -k "https://web2.psa-team8.cit.tum.de/" 2>&1 | grep -w "200\|301" > /dev/null ; then
-    print_output "Website web2.psa-team8.cit.tum.de (https) is reachable" true
-else
-    print_output "Website web2.psa-team8.cit.tum.de (https) is not reachable" false
-fi
-
-if curl --insecure -G web2.psa-team8.cit.tum.de 2>&1 | grep -w "Zweite Website" > /dev/null ; then
-    print_output "Content of website web2 is as expected" true
-else
-    print_output "Content of website web2 is not as expected" false
+        print_warning "Webserver Tests bitte auf Webserver-VM ausfuehren!"
 fi
 
 print_summary

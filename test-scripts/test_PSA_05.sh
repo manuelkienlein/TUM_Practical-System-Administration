@@ -58,42 +58,57 @@ print_summary () {
         echo ""
 }
 
+test_service_active () {
+        STATUS="$(systemctl is-active $1)"
+        if [ "${STATUS}" = "active" ]; then
+                print_output "Service $1 is running" true
+        else
+                print_output "Service $1 is not running" false
+        fi
+}
+
 # ---------------------------------------
 # Test Cases
 # ---------------------------------------
 
-print_title "Task 5: Database Test Script"
+if [ "$HOSTNAME" = "vmpsa08-01" ]; then
+        print_title "Task 5: Database Test Script"
+		
+		test_service_active postgresql
 
-print_headline "List of all users in the database"
+		print_headline "List of all users in the database"
 
-su postgres -c "psql -c '\du'"
+		su postgres -c "psql -c '\du'"
 
-print_headline "List of all databases"
+		print_headline "List of all databases"
 
-su postgres -c "psql -c '\l'"
+		su postgres -c "psql -c '\l'"
 
-print_headline "Check user login permissions"
+		print_headline "Check user login permissions"
 
-if psql postgresql://batman:12345678@192.168.8.2:3306/sql1_batman 2>&1 | grep -w "Verbindung zum Server auf »192.168.8.2«, Port 3306 fehlgeschlagen: FATAL:  kein pg_hba.conf-Eintrag für Host" > /dev/null ; then
-    print_output "Login disabled for user batman" true
+		if psql postgresql://batman:12345678@192.168.8.2:3306/sql1_batman 2>&1 | grep -w "Verbindung zum Server auf »192.168.8.2«, Port 3306 fehlgeschlagen: FATAL:  kein pg_hba.conf-Eintrag für Host" > /dev/null ; then
+			print_output "Login disabled for user batman" true
+		else
+			print_output "Login not disabled for user batman" false
+		fi
+
+		if psql postgresql://alfred:12345678@192.168.8.2:3306/sql2_alfred -c "\l" 2>&1 | grep -w "Liste der Datenbanken" > /dev/null ; then
+			print_output "Login enabled for user alfred from external vm" true
+		else
+			print_output "Login not possible for user alfred from external vm" false
+		fi
+
+		if psql postgresql://alfred@192.168.8.2:3306/sql2_alfred -c "\l" 2>&1 | grep -w "Passwort-Authentifizierung für Benutzer »alfred« fehlgeschlagen" > /dev/null ; then
+			print_output "Password is required for logging in user alfred" true
+		else
+			print_output "No password is required for logging in user alfred" false
+		fi
+
+		print_headline "List of all database backups"
+
+		tree /mnt/storage/backup/postgres
 else
-    print_output "Login not disabled for user batman" false
+        print_warning "Datenbank Tests bitte auf Webserver-VM (VM02) ausfuehren!"
 fi
-
-if psql postgresql://alfred:12345678@192.168.8.2:3306/sql2_alfred -c "\l" 2>&1 | grep -w "Liste der Datenbanken" > /dev/null ; then
-    print_output "Login enabled for user alfred from external vm" true
-else
-    print_output "Login not possible for user alfred from external vm" false
-fi
-
-if psql postgresql://alfred@192.168.8.2:3306/sql2_alfred -c "\l" 2>&1 | grep -w "Passwort-Authentifizierung für Benutzer »alfred« fehlgeschlagen" > /dev/null ; then
-    print_output "Password is required for logging in user alfred" true
-else
-    print_output "No password is required for logging in user alfred" false
-fi
-
-print_headline "List of all database backups"
-
-tree /var/backups/postgres
 
 print_summary

@@ -56,67 +56,68 @@ print_summary () {
         echo ""
 }
 
+test_service_active () {
+        STATUS="$(systemctl is-active $1)"
+        if [ "${STATUS}" = "active" ]; then
+                print_output "Service $1 is running" true
+        else
+                print_output "Service $1 is not running" false
+        fi
+}
+
 # ---------------------------------------
 # Test Cases
 # ---------------------------------------
 
 print_title "Task 7: File Server Test Script"
 
-print_headline "Test Software-RAID"
+if [ "$HOSTNAME" = "vmpsateam08-04" ]; then
+        print_headline "List of all NFS shares"
 
-print_headline "List of all NFS shares"
+		showmount -e localhost
 
-showmount -e localhost
+		print_headline "Test NFS service"
 
-print_headline "Test NFS service"
+		test_service_active nfs-kernel-server
 
-if systemctl status nfs-kernel-server 2>&1 | grep -w "Active: active" > /dev/null ; then
-   print_output "NFS service is running" true
+		print_headline "Test NFS shares"
+
+		if showmount -e localhost 2>&1 | grep -w "/mnt/storage/home" > /dev/null ; then
+			print_output "NFS 'home' share is available" true
+		else
+			print_output "NFS 'home' share is not available" false
+		fi
+
+		if showmount -e localhost 2>&1 | grep -w "/mnt/storage/www" > /dev/null ; then
+			print_output "NFS 'www' share is available" true
+		else
+			print_output "NFS 'www' share is not available" false
+		fi
+
+		if showmount -e localhost 2>&1 | grep -w "/mnt/storage/postgresql" > /dev/null ; then
+			print_output "NFS 'postgresql' share is available" true
+		else
+			print_output "NFS 'postgresql' share is not available" false
+		fi
+
+		if showmount -e localhost 2>&1 | grep -w "/mnt/storage/log" > /dev/null ; then
+			print_output "NFS 'log' share is available" true
+		else
+			print_output "NFS 'log' share is not available" false
+		fi
+
+
+		if showmount -e localhost 2>&1 | grep -w "/mnt/storage/backup" > /dev/null ; then
+			print_output "NFS 'backup' share is available" true
+		else
+			print_output "NFS 'backup' share is not available" false
+		fi
+
+		print_headline "Test Samba service"
+
+		test_service_active smbd
 else
-   print_output "NFS service is down" false
+        print_warning "Fileserver Tests bitte auf Fileserver-VM ausfuehren!"
 fi
-
-print_headline "Test NFS shares"
-
-if showmount -e localhost 2>&1 | grep -w "/mnt/storage/home" > /dev/null ; then
-    print_output "NFS 'home' share is available" true
-else
-    print_output "NFS 'home' share is not available" false
-fi
-
-if showmount -e localhost 2>&1 | grep -w "/mnt/storage/www" > /dev/null ; then
-    print_output "NFS 'www' share is available" true
-else
-    print_output "NFS 'www' share is not available" false
-fi
-
-if showmount -e localhost 2>&1 | grep -w "/mnt/storage/postgresql" > /dev/null ; then
-    print_output "NFS 'postgresql' share is available" true
-else
-    print_output "NFS 'postgresql' share is not available" false
-fi
-
-if showmount -e localhost 2>&1 | grep -w "/mnt/storage/log" > /dev/null ; then
-    print_output "NFS 'log' share is available" true
-else
-    print_output "NFS 'log' share is not available" false
-fi
-
-
-if showmount -e localhost 2>&1 | grep -w "/mnt/storage/backup" > /dev/null ; then
-    print_output "NFS 'backup' share is available" true
-else
-    print_output "NFS 'backup' share is not available" false
-fi
-
-print_headline "Test Samba service"
-
-if systemctl status smbd 2>&1 | grep -w "Active: active" > /dev/null ; then
-   print_output "Samba service is running" true
-else
-   print_output "Samba service is down" false
-fi
-
-print_headline "Test Samba"
 
 print_summary

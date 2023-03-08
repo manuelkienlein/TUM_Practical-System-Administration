@@ -67,6 +67,12 @@ print_summary () {
 
 print_title "Task 10: Zabbix Monitoring Test Script"
 
+if [ "$HOSTNAME" = "vmpsa08-06" ]; then
+        
+else
+        print_warning "Zabbix Tests bitte auf Monitoring-VM ausfuehren!"
+fi
+
 print_headline "Test Zabbix Services"
 
 test_service_active zabbix-server
