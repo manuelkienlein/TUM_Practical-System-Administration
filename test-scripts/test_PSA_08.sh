@@ -80,48 +80,48 @@ if [ "$HOSTNAME" = "vmpsateam08-01" ]; then
 
         print_headline "Test LDAP users"
 
-        if ldapsearch -x -b "uid=ge65xin,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
+        if ldapsearch -x -b "uid=ge65xin,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
                 print_output "User ge65xin is registred in LDAP" true
         else
                 print_output "User ge65xin not found in LDAP" false
         fi
 
-        if ldapsearch -x -b "uid=ga84guv,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
+        if ldapsearch -x -b "uid=ga84guv,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
                 print_output "User ga84guv is registred in LDAP" true
         else
                 print_output "User ga84guv not found in LDAP" false
         fi
 
         print_headline "Example output for a given user"
-        ldapsearch -x -b "uid=ge65xin,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de"
+        ldapsearch -x -b "uid=ge65xin,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678
 
         print_headline "Test LDAP groups"
 
-        if ldapsearch -x -b "cn=users,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
+        if ldapsearch -x -b "cn=users,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
                print_output "Group users is registred in LDAP" true
         else
                print_output "Group users not found in LDAP" false
         fi
 
-        if ldapsearch -x -b "cn=users,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
+        if ldapsearch -x -b "cn=users,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "numEntries: 1" > /dev/null ; then
                print_output "Group admins is registred in LDAP" true
         else
                print_output "Group admins not found in LDAP" false
         fi
 
-        if ldapsearch -x -b "cn=admins,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "member: uid=ge65xin,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" > /dev/null ; then
+        if ldapsearch -x -b "cn=admins,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "member: uid=ge65xin,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" > /dev/null ; then
                 print_output "User ge65xin is in admin group" true
         else
                 print_output "User ge65xin is not in admin group" false
         fi
 
-        if ldapsearch -x -b "cn=admins,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "member: uid=ga84guv,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" > /dev/null ; then
+        if ldapsearch -x -b "cn=admins,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "member: uid=ga84guv,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" > /dev/null ; then
                 print_output "User ga84guv is in admin group" true
         else
                 print_output "User ga84guv is not in admin group" false
         fi
 
-        if ldapsearch -x -b "cn=admins,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" 2>&1 | grep -w "member: uid=ga27hef,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" > /dev/null ; then
+        if ldapsearch -x -b "cn=admins,ou=groups,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" -D cn=admin,dc=team08,dc=psa,dc=cit,dc=tum,dc=de -w 12345678 2>&1 | grep -w "member: uid=ga27hef,ou=users,dc=team08,dc=psa,dc=cit,dc=tum,dc=de" > /dev/null ; then
                 print_output "User ga27hef is in admin group" false
         else
                 print_output "User ga27hef is not in admin group" true
