@@ -134,13 +134,13 @@ if [ "$HOSTNAME" = "vmpsa08-02" ]; then
 		fi
 		
 		print_headline "Test website reachability"
-		output=$(wget -qO- http://tum.de)
+		output=$(wget -qO- --dns-timeout=2 --timeout=2 http://tum.de)
 
 		if [ ${#output} -le 50 ]
 		then
-			print_output "Website tum.de is not reachable" false
+				print_output "Website tum.de is blocked" true
 		else
-			print_output "Website tum.de is reachable" true
+				print_output "Website tum.de is not blocked" false
 		fi
 		
 		print_headline "Port scanning for 192.168.8.2"
