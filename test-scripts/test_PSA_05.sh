@@ -71,9 +71,9 @@ test_service_active () {
 # Test Cases
 # ---------------------------------------
 
+print_title "Task 5: Database Test Script"
+
 if [ "$HOSTNAME" = "vmpsa08-01" ]; then
-        print_title "Task 5: Database Test Script"
-		
 		test_service_active postgresql
 
 		print_headline "List of all users in the database"
