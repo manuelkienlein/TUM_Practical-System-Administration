@@ -73,7 +73,7 @@ test_service_active () {
 
 print_title "Task 5: Database Test Script"
 
-if [ "$HOSTNAME" = "vmpsa08-01" ]; then
+if [ "$HOSTNAME" = "vmpsateam08-01" ]; then
 		test_service_active postgresql
 
 		print_headline "List of all users in the database"
@@ -98,7 +98,7 @@ if [ "$HOSTNAME" = "vmpsa08-01" ]; then
 			print_output "Login not possible for user alfred from external vm" false
 		fi
 
-		if psql postgresql://alfred@192.168.8.2:3306/sql2_alfred -c "\l" 2>&1 | grep -w "Passwort-Authentifizierung für Benutzer »alfred« fehlgeschlagen" > /dev/null ; then
+		if psql postgresql://alfred@192.168.8.2:3306/sql2_alfred -w -c "\l" 2>&1 | egrep -w "Passwort-Authentifizierung für Benutzer »alfred« fehlgeschlagen|no password supplied" > /dev/null ; then
 			print_output "Password is required for logging in user alfred" true
 		else
 			print_output "No password is required for logging in user alfred" false
@@ -108,7 +108,7 @@ if [ "$HOSTNAME" = "vmpsa08-01" ]; then
 
 		tree /mnt/storage/backup/postgres
 else
-        print_warning "Datenbank Tests bitte auf Webserver-VM (VM02) ausfuehren!"
+        print_warning "Datenbank Tests bitte auf Secondary-DB-VM (VM01) ausfuehren!"
 fi
 
 print_summary

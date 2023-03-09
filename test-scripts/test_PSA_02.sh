@@ -138,9 +138,9 @@ if [ "$HOSTNAME" = "vmpsa08-02" ]; then
 
 		if [ ${#output} -le 50 ]
 		then
-				print_output "Website tum.de is blocked" true
+				print_output "Website tum.de is not reachable" false
 		else
-				print_output "Website tum.de is not blocked" false
+				print_output "Website tum.de is not reachable" true
 		fi
 		
 		print_headline "Port scanning for 192.168.8.2"
