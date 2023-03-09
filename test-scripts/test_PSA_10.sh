@@ -29,6 +29,12 @@ print_title() {
         echo ""
 }
 
+print_headline() {
+        echo ""
+        echo " ${COLOR_BLUE_BOLD}$1${COLOR_RESET}"
+        echo ""
+}
+
 print_output () {
         if [ $2 = true ] ; then
                 echo " [${COLOR_GREEN}PASS${COLOR_RESET}] ${COLOR_GRAY}$1${COLOR_RESET}"
